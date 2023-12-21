@@ -1,0 +1,197 @@
+
+#------------------------------------------------------------------------------
+# Question 1 
+# Create London_Paris database 
+CREATE DATABASE London_Paris_DB;
+USE London_Paris_DB;
+
+#------------------------------------------------------------------------------
+# Question 2
+# Create tables
+CREATE TABLE country_ids (
+    country char(20) NOT NULL,
+    country_name char(20),
+    PRIMARY KEY (country)
+);
+
+CREATE TABLE sample_characteristics (
+    sample_id char(20) NOT NULL,
+    dob char(20),
+    dor char(20),
+    dod char(20),
+    dodiag char(20),
+    sex int,
+    cc_status int,
+    smoke_status int,
+    country char(20) NOT NULL,
+    center char(20),
+    vit_status int,
+    a_sta_smok double,
+    a_quit_smok double,
+    age_recr double,
+    n_cigret_lifetime double,
+    PRIMARY KEY (sample_id),
+    FOREIGN KEY (country) REFERENCES country_ids(country)
+);
+
+CREATE TABLE sample_genotypes (
+    sample_id char(20) NOT NULL,
+    SNP1 int,
+    SNP2 int,
+    SNP3 int,
+    SNP4 int,
+    SNP5 int,
+    PRIMARY KEY (sample_id),
+    FOREIGN KEY (sample_id) REFERENCES sample_characteristics(sample_id)
+);
+
+#------------------------------------------------------------------------------
+# Question 3
+# Imported data into tables -- Check Report
+
+#------------------------------------------------------------------------------
+# Question 4
+# ER diagram -- Check report
+
+#------------------------------------------------------------------------------
+# Question 5
+# Determine number of records
+SELECT COUNT(country)
+FROM country_ids; #13 records
+
+SELECT COUNT(sample_id)
+FROM sample_genotypes; #500 records
+
+SELECT COUNT(sample_id)
+FROM sample_characteristics; #1000 records
+
+#------------------------------------------------------------------------------
+# Question 6
+
+# 6.1:
+# This code sums up the number of null values in the Attribute_1 column (in table1) and 
+# returns it under the Attribute_1 heading
+
+# 6.2 / 6.3:
+# This code counts how many null values each column in sample_characteristics contains
+SELECT
+	SUM(CASE WHEN sample_id IS NULL then 1 ELSE 0 END) as sample_id,
+    SUM(CASE WHEN dob IS NULL then 1 ELSE 0 END) as dob,
+    SUM(CASE WHEN dor IS NULL then 1 ELSE 0 END) as dor,
+    SUM(CASE WHEN dod IS NULL then 1 ELSE 0 END) as dod,
+    SUM(CASE WHEN dodiag IS NULL then 1 ELSE 0 END) as dodiag,
+    SUM(CASE WHEN sex IS NULL then 1 ELSE 0 END) as sex,
+    SUM(CASE WHEN cc_status IS NULL then 1 ELSE 0 END) as cc_status,
+    SUM(CASE WHEN smoke_status IS NULL then 1 ELSE 0 END) as smoke_status,
+    SUM(CASE WHEN country IS NULL then 1 ELSE 0 END) as country,
+    SUM(CASE WHEN center IS NULL then 1 ELSE 0 END) as center,
+    SUM(CASE WHEN vit_status IS NULL then 1 ELSE 0 END) as vit_status,
+    SUM(CASE WHEN a_sta_smok IS NULL then 1 ELSE 0 END) as a_sta_smok,
+    SUM(CASE WHEN a_quit_smok IS NULL then 1 ELSE 0 END) as a_quit_smok,
+    SUM(CASE WHEN age_recr IS NULL then 1 ELSE 0 END) as age_recr,
+    SUM(CASE WHEN n_cigret_lifetime IS NULL then 1 ELSE 0 END) as n_cigret_lifetime
+FROM sample_characteristics;
+
+#------------------------------------------------------------------------------
+# Question 7
+
+# 7.1:
+# Age of recruitment for each country
+SELECT country_ids.country, country_name, ROUND(AVG(age_recr),2) AS avg_age_country
+FROM country_ids 
+INNER JOIN sample_characteristics
+ON country_ids.country = sample_characteristics.country
+GROUP BY country_ids.country
+ORDER BY country_ids.country;
+
+
+# 7.2:
+# Country with most samples
+SELECT country_ids.country, country_name, 
+COUNT(sample_characteristics.country) AS counts
+FROM country_ids INNER JOIN sample_characteristics
+ON country_ids.country = sample_characteristics.country
+GROUP BY country_ids.country
+ORDER BY counts DESC;
+# Hence Italy has the most samples
+
+# 7.3:
+# Center with least samples
+SELECT center, COUNT(sample_id) AS counts
+FROM sample_characteristics
+GROUP BY center
+ORDER BY counts ASC;
+# Hence center 25 has the least samples
+
+# 7.4: 
+# Country with single younget age at recruitment 
+SELECT country_ids.country,country_ids.country_name, 
+MIN(sample_characteristics.age_recr) AS min_age_country
+FROM country_ids
+INNER JOIN sample_characteristics
+ON country_ids.country = sample_characteristics.country
+GROUP BY sample_characteristics.country
+ORDER BY min_age_country;
+# Hence the sample with the lowest age comes from Italy
+
+# 7.5:
+# Country with most males samples
+SELECT country_ids.country,country_ids.country_name, 
+SUM(CASE WHEN (sample_characteristics.sex = 2) THEN 1 ELSE 0 END) AS number_of_males
+FROM country_ids
+INNER JOIN sample_characteristics
+ON country_ids.country = sample_characteristics.country
+GROUP BY country
+ORDER BY number_of_males DESC;
+# Hence country with largest amount of male samples is Italy
+
+# 7.6:
+# Country with most distinct centers
+SELECT country_ids.country, country_ids.country_name, COUNT(DISTINCT sample_characteristics.country, sample_characteristics.center) AS number_distinct_centers
+FROM sample_characteristics
+INNER JOIN country_ids
+ON country_ids.country = sample_characteristics.country
+GROUP BY country
+ORDER BY number_distinct_centers DESC;
+# Hence Italy has the largest number of distinct centers supplying samples to it (29)
+
+# 7.7:
+# Country-center pair wtih most samples
+SELECT country_ids.country, country_ids.country_name, sample_characteristics.center, COUNT(sample_characteristics.center) AS number_samples_per_center
+FROM sample_characteristics
+INNER JOIN country_ids
+ON country_ids.country = sample_characteristics.country
+GROUP BY sample_characteristics.country, sample_characteristics.center
+ORDER BY number_samples_per_center DESC;
+# Hence the country-center pair with the largest amount of samples is Italy-92
+
+#------------------------------------------------------------------------------
+# Question 8
+
+# 8.1:
+# Create new table
+CREATE TABLE sample_char_genotypes
+AS (SELECT sample_genotypes.sample_id, sample_characteristics.dob, 
+sample_characteristics.sex, sample_characteristics.cc_status, 
+sample_characteristics.age_recr, country_ids.country, 
+country_ids.country_name, sample_genotypes.SNP1, 
+sample_genotypes.SNP2, sample_genotypes.SNP3,
+sample_genotypes.SNP4, sample_genotypes.SNP5
+FROM sample_genotypes INNER JOIN sample_characteristics 
+ON sample_genotypes.sample_id = sample_characteristics.sample_id
+INNER JOIN country_ids 
+ON sample_characteristics.country = country_ids.country); 
+
+# 8.2:
+# Check whether it's inherited primary or foreign key 
+# Read from ER diagram -- Check report
+
+# 8.3:
+# Export data -- Check report
+
+#------------------------------------------------------------------------------
+
+# Question 9:
+# Connecting MySQL to R: Check R code and report 
+  
+  #------------------------------------------------------------------------------
