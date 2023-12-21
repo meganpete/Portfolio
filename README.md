@@ -1,6 +1,6 @@
 **About me**
 
-Hi, I'm Megan, a data scientist working in the healthcare sector in London. I hold an MSc in Health Data Analytics and Machine Learning from Imperial College London, and a BSc in Mathematics from the University of Groningen. I believe there is significant untapped potential in the healthcare industry that can be unlocked through harnessing its data capabilities. I am thoroughly enjoying being a part of this rapidly evolving sector.
+Hi, I'm Megan, a data scientist working in the healthcare sector in London. I hold an MSc in Health Data Analytics and Machine Learning from Imperial College London, and a BSc in Mathematics from the University of Groningen. I believe there is significant untapped potential in the healthcare industry that is now being unlocked through harnessing its data capabilities. I thoroughly enjoy being a part of this rapidly evolving sector, combining my interests in healthcare, mathematics and machine learning.
 
 **My portfolio**
 
