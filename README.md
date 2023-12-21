@@ -4,4 +4,4 @@ Hi, I'm Megan, a data scientist working in the healthcare sector in London. I ho
 
 **My portfolio**
 
-The purpose of this repository is to showcase examples of data science projects which I have undertaken either at university or in my own time. Projects from my job are not included due to data privacy. The main programming languages used are Python and R. Each folder includes a README file, giving details about the project. This is by no means an exhaustive portfolio, but simply a small glimpse of the type of work I am interested in.
+The purpose of this repository is to showcase examples of data science projects which I have undertaken either at university or in my own time. Projects from my job are not included due to data privacy. The main programming languages used are Python, R and SQL. Each folder includes a README file, giving details about the project. This is by no means an exhaustive portfolio, but simply a small glimpse of the type of work I am interested in.
