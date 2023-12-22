@@ -1,4 +1,4 @@
-
+-- language: sql
 #------------------------------------------------------------------------------
 # Question 1 
 # Create London_Paris database 
