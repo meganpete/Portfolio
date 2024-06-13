@@ -18,4 +18,4 @@ Numerous statistical and machine learning techniques have been used to answer re
 
 **Data**
 
-Various types of data are used for my projects, including time series air pollution data, blood count data, text files for NLP, genotype data, house price data and randomised controlled trial data. Many of these datasets are extremely large.
+Various types of data are used for my projects, including time series air pollution data, blood count data (UK Biobank), text files for NLP, genotype data, house price data and randomised controlled trial data. Many of these datasets are extremely large.
